@@ -10,15 +10,16 @@ namespace NLayerProject.Data.Repository
 {
     public class ProductRepository : Repository<Product>, IProductRepository
     {
-        private AppDbContext appDbContext { get => _context as AppDbContext; }
+        private AppDbContext _appDbContext => _context as AppDbContext;
+
         public ProductRepository(DbContext context) : base(context)
         {
         }
 
         public async Task<Product> GetWithCategoryByIdAsync(int productId)
         {
-            return await appDbContext.Products.Include(x => x.Category)
-                .FirstOrDefaultAsync(x => x.Id == productId);
+            return await _appDbContext.Products.Include(x => x.Category)
+                .SingleOrDefaultAsync(x => x.Id == productId);
 
         }
     }
