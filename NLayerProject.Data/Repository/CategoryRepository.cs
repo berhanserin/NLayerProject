@@ -11,7 +11,7 @@ namespace NLayerProject.Data.Repository
     public class CategoryRepository : Repository<Category>, ICategoryRepository
     {
         private AppDbContext _appDbContext => _context as AppDbContext;
-        public CategoryRepository(DbContext context) : base(context)
+        public CategoryRepository(AppDbContext context) : base(context)
         {
         }
 

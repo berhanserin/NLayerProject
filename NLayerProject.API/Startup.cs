@@ -10,6 +10,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using NLayerProject.Core.Repositories;
+using NLayerProject.Core.Service;
+using NLayerProject.Core.UnitOfWorks;
+using NLayerProject.Data;
+using NLayerProject.Data.Repository;
+using NLayerProject.Data.UnitOfWorks;
+using NLayerProject.Service.Serivces;
 
 namespace NLayerProject.API
 {
@@ -22,13 +30,34 @@ namespace NLayerProject.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
+
+            services.AddScoped(typeof(IRepository<>),typeof(Repository<>));
+            services.AddScoped(typeof(IService<>),typeof(Service<>));
+            services.AddScoped<ICategoryService,CategoryService>();
+            services.AddScoped<IProductService,ProductService>();
+
+            services.AddScoped<IUnitOfWrok, UnitOfWork>();
+
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration["ConnectionStrings:SqlConStr"].ToString(),
+                    o => o.MigrationsAssembly("NLayerProject.Data"));
+            });
+
+           
+
+            //services.AddScoped<IUnitOfWrok, UnitOfWork>(); Bir istek içersinde tekrar çaðýrýlýrsa o isteði kullanýr
+
+            //services.AddTransient(); Her istekde tekrar nesne oluþturur
+
+
+
             services.AddControllers();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
