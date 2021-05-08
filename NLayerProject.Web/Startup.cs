@@ -8,14 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using NLayerProject.Core.Repositories;
-using NLayerProject.Core.Service;
-using NLayerProject.Core.UnitOfWorks;
-using NLayerProject.Data;
-using NLayerProject.Data.Repository;
-using NLayerProject.Data.UnitOfWorks;
-using NLayerProject.Service.Serivces;
+using NLayerProject.Web.ApiService;
 using NLayerProject.Web.Filters;
 
 namespace NLayerProject.Web
@@ -31,21 +24,16 @@ namespace NLayerProject.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient<CategoryApiService>(options =>
+            {
+                options.BaseAddress=new Uri(Configuration["baseUrl"]);
+            });
+
+
             services.AddControllersWithViews();
 
             services.AddScoped<NotFoundFilter>();
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped(typeof(IService<>), typeof(Service<>));
-            services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<IProductService, ProductService>();
-            services.AddAutoMapper(typeof(Startup));
-            services.AddScoped<IUnitOfWrok, UnitOfWork>();
 
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration["ConnectionStrings:SqlConStr"].ToString(),
-                    o => o.MigrationsAssembly("NLayerProject.Data"));
-            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
