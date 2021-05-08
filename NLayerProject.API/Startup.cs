@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using NLayerProject.API.Filters;
 using NLayerProject.Core.Repositories;
 using NLayerProject.Core.Service;
 using NLayerProject.Core.UnitOfWorks;
@@ -34,6 +35,8 @@ namespace NLayerProject.API
         {
             services.AddAutoMapper(typeof(Startup));
 
+            services.AddScoped<NotFoundFilter>();
+
             services.AddScoped(typeof(IRepository<>),typeof(Repository<>));
             services.AddScoped(typeof(IService<>),typeof(Service<>));
             services.AddScoped<ICategoryService,CategoryService>();
@@ -56,6 +59,12 @@ namespace NLayerProject.API
 
 
             services.AddControllers();
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+                //hata deðerlerini ben ele alýcam. Baskýlýcam. Kendim hata deðerlerini tanýmlýcam
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

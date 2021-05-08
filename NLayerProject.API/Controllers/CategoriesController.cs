@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using NLayerProject.API.DTOs;
+using NLayerProject.API.Filters;
 using NLayerProject.Core.Models;
 using NLayerProject.Core.Service;
 
@@ -31,6 +32,7 @@ namespace NLayerProject.API.Controllers
             
             return Ok(_mapper.Map<IEnumerable<CategoryDto>>(category));
         }
+        [ServiceFilter(typeof(NotFoundFilter))]
         [HttpGet("{id}/products")]
         public async Task<IActionResult> GetProductsById(int id)
         {
@@ -38,7 +40,7 @@ namespace NLayerProject.API.Controllers
 
             return Ok(_mapper.Map<CategoryWithProductDto>(category));
         }
-
+        [ServiceFilter(typeof(NotFoundFilter))]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdTask(int id)
         {
@@ -55,6 +57,7 @@ namespace NLayerProject.API.Controllers
             return Created(string.Empty, _mapper.Map<CategoryDto>(newCategory));
         }
 
+        [ServiceFilter(typeof(NotFoundFilter))]
         [HttpDelete("{id}")]
         public IActionResult Remove(int id)
         {
