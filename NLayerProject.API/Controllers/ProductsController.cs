@@ -41,6 +41,7 @@ namespace NLayerProject.API.Controllers
 
             return Ok(_mapper.Map<ProductDto>(product));
         }
+
         [ServiceFilter(typeof(NotFoundFilter))]
         [HttpGet("{id}/category")]
         public async Task<IActionResult> GetByWithCategoryById(int id)
@@ -49,6 +50,7 @@ namespace NLayerProject.API.Controllers
 
             return Ok(_mapper.Map<ProductWithCategoryDto>(categoryCome));
         }
+
         [ValidationsFilter]
         [HttpPost]
         public async Task<IActionResult> Save(ProductDto dto)
@@ -57,10 +59,16 @@ namespace NLayerProject.API.Controllers
 
             return Created(string.Empty, _mapper.Map<ProductDto>(newproduct));
         }
-
+         
+        [ValidationsFilter]
         [HttpPut]
         public IActionResult Update(ProductDto productDto)
         {
+            if (productDto.Id==0)
+            {
+                throw new Exception("Id alanı gereklidir.");
+            }
+
             var product = _productService.Update(_mapper.Map<Product>(productDto));
 
             return NoContent();

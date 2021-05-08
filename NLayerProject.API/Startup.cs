@@ -10,7 +10,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using NLayerProject.API.DTOs;
+using NLayerProject.API.Extensions;
 using NLayerProject.API.Filters;
 using NLayerProject.Core.Repositories;
 using NLayerProject.Core.Service;
@@ -73,6 +78,8 @@ namespace NLayerProject.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCustomException();
 
             app.UseHttpsRedirection();
 
